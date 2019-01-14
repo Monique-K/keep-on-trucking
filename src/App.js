@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.scss';
+
+// Importing api data as json files temporarily 
 const stopsJson = require('./json-api/stops');
 const legsJson = require('./json-api/legs');
 const driverJson = require('./json-api/driver');
@@ -91,13 +93,23 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="map">
-          {this.makeGrid()}
+        <div className="title">
+        Keep on Truckin'
         </div>
-        <div className="drop-down">
-        <select>
-          {this.dropDown()}
-        </select>
+        <div className="main">
+          <div className="map">
+            {this.makeGrid()}
+          </div>
+          <div class="dropdown" id="dropdown-container">
+            <button class="dropbtn drop-down">Select Stop</button>
+            <div class="dropdown-content">
+              {this.dropDown()}
+              {/* Test links until forEach function works */}
+              <a href="#">Link 1</a>
+              <a href="#">Link 2</a>
+              <a href="#">Link 3</a>
+            </div>
+          </div>
         </div>
       </div>
     );
