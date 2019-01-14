@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^3.8.3",
-    "@material/menu": "^0.43.0",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.9",
     "react": "^16.7.0",
