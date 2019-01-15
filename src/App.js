@@ -16,6 +16,7 @@ class App extends Component {
     }
   }
 
+  //  GET REQUESTS FOR JSON API *****************
   // getStops() {
   //   fetch('http://localhost:8080/stops', {
   //     method: 'GET', 
@@ -66,13 +67,13 @@ class App extends Component {
   //   });
   // }
   
+  // CREATE 200 X 200 GRID **************************
   makeGrid() {
     const grid = []
     for (let i = 0; i < 10; i++) {
       let id = "box" + i 
       grid.push(<div key={id} className={`box ${id}`}></div>)
       }
-      console.log(grid)
       grid.forEach(div => {
         return div
       })
@@ -83,6 +84,7 @@ class App extends Component {
       // }
   }
 
+  // POPULATE DROP DOWN WITH STOP LIST FROM STATE
   dropDown() {
     const items = this.state.allStops
     items.forEach(item => {
