@@ -95,6 +95,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+      <div className="banner">
+        <img src={require('./images/banner-truck.jpg')} alt="truck" />
+      </div>
         <div className="title">
         Keep on Truckin'
         </div>
