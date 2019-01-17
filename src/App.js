@@ -54,9 +54,9 @@ class App extends Component {
     this.getLegs();
     this.getDriver();
     this.getLegCoordinates();
-    this.showDriver();
   }
   
+
   // CREATE 200 X 200 GRID **************************
   makeGrid = () => {
     const grid = []
@@ -80,16 +80,20 @@ class App extends Component {
     this.setState({ updatePercent: e.target.value})
   }
 
+  // ------------------------------------------------------------------
   showDriver = () => {
-    let activeLeg = this.state.driver.activeLeg
+    let activeLeg = this.state.driver.activeLegID
     let start = ""
-    for (let i = 0; i < this.state.allStops.length; i ++) {
-      if (activeLeg[0] === this.state.allStops[i].name) {
-        start = activeLeg[0]
-        console.log(start)
+    if (activeLeg) {
+      for (let i = 0; i < this.state.allStops.length; i ++) {
+        if (activeLeg[0] === this.state.allStops[i].name) {
+          start = activeLeg[0]
+          return start
+        }
       }
+      return start
     }
-
+    // Temporary - show driver at start of leg
     // let top = stop.y * 2
     // let left = stop.x * 2
     // return (<i className="fas fa-truck"></i>)
@@ -101,7 +105,8 @@ class App extends Component {
         let left = stop.x * 2
         return (
           <div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>
-            {stop.name} <i className="fas fa-gas-pump"></i>
+            {stop.name} &nbsp;
+            <i className="fas fa-circle fa-xs"></i>
           </div>
         )
       })
@@ -151,6 +156,7 @@ class App extends Component {
           <div className="map">
             {this.makeGrid()}
             {this.showStops()}
+            {this.showDriver()}
           </div>
 
           <form className="update-form">
