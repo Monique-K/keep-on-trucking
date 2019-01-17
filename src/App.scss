@@ -25,10 +25,12 @@
   display: flex;
   justify-content: center;
   align-items: space-between;
+  flex-direction: column;
 }
 
 .title {
   margin-top: 20px;
+  margin-bottom: 50px;
   font-family: 'Staatliches', cursive;
   color: rgb(1, 136, 46);
   font-size: 3rem;
@@ -36,19 +38,33 @@
 }
 
 .map {
-  width: 400px;
-  height: 400px;
+  position: relative;
+  width: 600px;
+  height: 600px;
   border: 2px solid #121E14;
   background-color: #FFFFFF;
   display: flex;
   flex-wrap: wrap;
-  // margin: auto;
+  flex-shrink: 0;
+  margin: 20px;
 }
 
 .box {
-  border: 1px solid blue;
-  width: 10px;
-  height: 10px; 
+  border: 0.25px solid rgb(195, 195, 196);
+  width: 60px;
+  height: 60px; 
+  box-sizing: border-box;
+}
+
+.truck-stop {
+  position: "absolute";
+}
+
+.update-form {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dropdown:hover .dropdown-content {

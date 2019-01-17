@@ -12,87 +12,99 @@ class App extends Component {
     this.state = {
       allStops: [],
       legs: [],
-      driver: {}
+      driver: {},
+      updatePercent: "",
     }
   }
 
   //  GET REQUESTS FOR JSON API *****************
-  getStops() {
+  getStops = () => {
     fetch('http://localhost:8080/stops', {
       method: 'GET', 
     })
-    .then(function(response) {
+    .then((response) => {
       response.text()
-      .then(function(data) {
-        console.log("stops:", JSON.parse(data))
-        return JSON.parse(data)
+      .then((data) => {
+        this.setState({allStops: JSON.parse(data)})
       });
     })
   }
 
-  getLegs() {
+  getLegs = () => {
     fetch('http://localhost:8080/legs', {
       method: 'GET', 
     })
-    .then(function(response) {
+    .then((response) => {
       response.text()
-      .then(function(data) {
-        console.log("legs:", JSON.parse(data))
-        return JSON.parse(data)
+      .then((data) => {
+        this.setState({legs: JSON.parse(data)})
       });
     })
   }
 
-  getDriver() {
+  getDriver = () => {
     fetch('http://localhost:8080/driver', {
       method: 'GET', 
     })
-    .then(function(response) {
+    .then((response) => {
       response.text()
-      .then(function(data) {
-        console.log("driver:", JSON.parse(data))
-        return JSON.parse(data)
+      .then((data) => {
+        this.setState({ driver: JSON.parse(data)}) 
       });
     })
   }
 
-  componentWillMount() {
-    const stops = this.getStops();
-    const legs = this.getLegs();
-    const driver = this.getDriver();
-    this.setState({
-      allStops: [...this.state.allStops, stops],
-      legs: [...this.state.legs, legs],
-      driver: {0: driver}
-    });
+  componentWillMount = () => {
+    this.getStops();
+    this.getLegs();
+    this.getDriver();
   }
   
   // CREATE 200 X 200 GRID **************************
-  makeGrid() {
+  makeGrid = () => {
     const grid = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       let id = "box" + i 
       grid.push(<div key={id} className={`box ${id}`}></div>)
       }
-      grid.forEach(div => {
-        return div
-      })
-      // for (let i = 0; i < grid.length; i++) {
-      //   if (i) {
-      //     return grid[i]
-      //   }
-      // }
+      return grid
   }
 
   // POPULATE DROP DOWN WITH STOP LIST FROM STATE
-  dropDown() {
-    const items = this.state.allStops
-    items.forEach(item => {
-      return (<option value={item.name} x={item.x} y={item.y}>{item.name}</option>)
-    })
+  dropDown = () => {
+    
+    const array = this.state.allStops.map(item => {
+        return (<div value={item.name} x={item.x} y={item.y} key={item.name}>{item.name}</div>)
+      })
+    
+    return array
   }
 
+  handlePercentChange = (e) => {
+    this.setState({ updatePercent: e.target.value})
+  }
+
+  // showDriver = () => {
+  //   if (this.state.driver !== {}) {
+  //     let leg = this.state.driver.activeLegID
+  //     console.log("leg", leg)
+  //   }
+  // }
+
+  showStops = () => {
+      let array = this.state.allStops.map(stop => {
+        let top = stop.y * 3
+        let left = stop.x * 3
+        return (<div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>{stop.name}</div>)
+      })
+      return array
+  }
+
+
   render() {
+    // this.showDriver()
+    
+
     return (
       <div className="App">
       <div className="banner">
@@ -104,17 +116,28 @@ class App extends Component {
         <div className="main">
           <div className="map">
             {this.makeGrid()}
+            {this.showStops()}
           </div>
-          <div class="dropdown" id="dropdown-container">
-            <button class="dropbtn drop-down">Select Stop</button>
-            <div class="dropdown-content">
-              {/* {this.dropDown()} */}
-              {/* Test links until forEach function works */}
-              <a href="#">Link 1</a>
-              <a href="#">Link 2</a>
-              <a href="#">Link 3</a>
+
+          <form className="update-form">
+            <div className="dropdown" id="dropdown-container">
+              <button className="dropbtn drop-down">Select Stop</button>
+              <div className="dropdown-content">
+                {this.dropDown()}
+              </div>
+              <br />
             </div>
-          </div>
+            <input 
+              type="text" 
+              value={this.state.updatePercent} 
+              placeholder="Percent complete"
+              onChange={this.handlePercentChange}
+            >
+            </input>
+            <button type="submit">Update</button>
+          </form>
+
+
         </div>
       </div>
     );
@@ -122,3 +145,21 @@ class App extends Component {
 }
 
 export default App;
+
+/*
+*********** TO DO ***********
+
+- set state with api datan-----
+- create 200 x 200 grid -------
+- show stops on grid by location
+- show driver position on grid
+- highlight complete legs and completed section of current leg
+- add form to change driver's position
+    - select leg via dropdown
+    - select percent progress via textbox
+
+
+
+
+
+*/
