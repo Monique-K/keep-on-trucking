@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import './App.scss';
 
-// Importing api data as json files temporarily 
-// const stopsJson = require('./json-api/stops');
-// const legsJson = require('./json-api/legs');
-// const driverJson = require('./json-api/driver');
-
 class App extends Component {
   constructor() {
     super();
@@ -58,7 +53,8 @@ class App extends Component {
     this.getStops();
     this.getLegs();
     this.getDriver();
-    this.getLegCoordinates()
+    this.getLegCoordinates();
+    this.showDriver();
   }
   
   // CREATE 200 X 200 GRID **************************
@@ -73,7 +69,6 @@ class App extends Component {
 
   // POPULATE DROP DOWN WITH STOP LIST FROM STATE
   dropDown = () => {
-    
     const array = this.state.allStops.map(item => {
         return (<div value={item.name} x={item.x} y={item.y} key={item.name}>{item.name}</div>)
       })
@@ -85,18 +80,30 @@ class App extends Component {
     this.setState({ updatePercent: e.target.value})
   }
 
-  // showDriver = () => {
-  //   if (this.state.driver !== {}) {
-  //     let leg = this.state.driver.activeLegID
-  //     console.log("leg", leg)
-  //   }
-  // }
+  showDriver = () => {
+    let activeLeg = this.state.driver.activeLeg
+    let start = ""
+    for (let i = 0; i < this.state.allStops.length; i ++) {
+      if (activeLeg[0] === this.state.allStops[i].name) {
+        start = activeLeg[0]
+        console.log(start)
+      }
+    }
+
+    // let top = stop.y * 2
+    // let left = stop.x * 2
+    // return (<i className="fas fa-truck"></i>)
+  }
 
   showStops = () => {
       let array = this.state.allStops.map(stop => {
         let top = stop.y * 2
         let left = stop.x * 2
-        return (<div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>{stop.name}</div>)
+        return (
+          <div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>
+            {stop.name} <i className="fas fa-gas-pump"></i>
+          </div>
+        )
       })
       return array
   }
@@ -107,7 +114,7 @@ class App extends Component {
     let x
     Math.hypot(a, b);
     Math.atan(x);
-    // line is a div with height 1 length hypot, absoulte position absolute, relative to the stop
+    // line is a div with height 1 length hypot, position absolute, relative to the stop
   }
 
   getLegCoordinates = () => {
