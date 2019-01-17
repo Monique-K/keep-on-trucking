@@ -58,6 +58,7 @@ class App extends Component {
     this.getStops();
     this.getLegs();
     this.getDriver();
+    this.getLegCoordinates()
   }
   
   // CREATE 200 X 200 GRID **************************
@@ -93,17 +94,43 @@ class App extends Component {
 
   showStops = () => {
       let array = this.state.allStops.map(stop => {
-        let top = stop.y * 3
-        let left = stop.x * 3
+        let top = stop.y * 2
+        let left = stop.x * 2
         return (<div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>{stop.name}</div>)
       })
       return array
   }
 
+  connectStops = () => {
+    let a 
+    let b
+    let x
+    Math.hypot(a, b);
+    Math.atan(x);
+    // line is a div with height 1 length hypot, absoulte position absolute, relative to the stop
+  }
+
+  getLegCoordinates = () => {
+    // get the coordinates from the stops
+    const legsWithCoords = []
+    console.log("STATE", this.state.legs)
+    this.state.legs.map(leg => {
+      legsWithCoords.push(leg)
+      console.log("!!", leg)
+      for (let i = 0; i < this.state.allStops.length; i++) {
+        if (leg.startStop === this.state.allStops[i].name) {
+          leg.startStopX = this.state.allStops[i].x
+          leg.startStopY = this.state.allStops[i].y
+        }
+      }
+      return leg
+    })
+    this.setState({legsWithCoords: legsWithCoords})
+  }
+
 
   render() {
     // this.showDriver()
-    
 
     return (
       <div className="App">
@@ -151,7 +178,7 @@ export default App;
 
 - set state with api datan-----
 - create 200 x 200 grid -------
-- show stops on grid by location
+- show stops on grid by location ----
 - show driver position on grid
 - highlight complete legs and completed section of current leg
 - add form to change driver's position
