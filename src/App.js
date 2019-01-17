@@ -69,10 +69,9 @@ class App extends Component {
 
   // POPULATE DROP DOWN WITH STOP LIST FROM STATE
   dropDown = () => {
-    const array = this.state.allStops.map(item => {
-        return (<div value={item.name} x={item.x} y={item.y} key={item.name}>{item.name}</div>)
+    const array = this.state.legs.map(item => {
+        return (<div value={item.legID} key={item.legID}>{item.legID}</div>)
       })
-    
     return array
   }
 
@@ -88,11 +87,14 @@ class App extends Component {
       for (let i = 0; i < this.state.allStops.length; i ++) {
         if (activeLeg[0] === this.state.allStops[i].name) {
           start = activeLeg[0]
-          return start
+          return (<i className="fas fa-truck"></i>)
         }
       }
-      return start
+      return 
     }
+    // find use percent finished to place along leg div
+
+
     // Temporary - show driver at start of leg
     // let top = stop.y * 2
     // let left = stop.x * 2
@@ -142,8 +144,6 @@ class App extends Component {
 
 
   render() {
-    // this.showDriver()
-
     return (
       <div className="App">
       <div className="banner">
@@ -193,7 +193,8 @@ export default App;
 - create 200 x 200 grid -------
 - show stops on grid by location ----
 - show driver position on grid
-- highlight complete legs and completed section of current leg
+- highlight complete legs  
+- hightlight completed section of current leg
 - add form to change driver's position
     - select leg via dropdown
     - select percent progress via textbox

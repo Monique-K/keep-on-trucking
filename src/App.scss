@@ -60,11 +60,16 @@
   position: "absolute";
 }
 
+.fa-truck {
+  z-index: 3;
+}
+
 .update-form {
   margin-top: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
 }
 
 .dropdown:hover .dropdown-content {
