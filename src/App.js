@@ -2,70 +2,70 @@ import React, { Component } from 'react';
 import './App.scss';
 
 // Importing api data as json files temporarily 
-const stopsJson = require('./json-api/stops');
-const legsJson = require('./json-api/legs');
-const driverJson = require('./json-api/driver');
+// const stopsJson = require('./json-api/stops');
+// const legsJson = require('./json-api/legs');
+// const driverJson = require('./json-api/driver');
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      allStops: stopsJson,
-      legs: legsJson,
-      driver: driverJson
+      allStops: [],
+      legs: [],
+      driver: {}
     }
   }
 
   //  GET REQUESTS FOR JSON API *****************
-  // getStops() {
-  //   fetch('http://localhost:8080/stops', {
-  //     method: 'GET', 
-  //   })
-  //   .then(function(response) {
-  //     response.text()
-  //     .then(function(data) {
-  //       console.log("stops:", JSON.parse(data))
-  //       return JSON.parse(data)
-  //     });
-  //   })
-  // }
+  getStops() {
+    fetch('http://localhost:8080/stops', {
+      method: 'GET', 
+    })
+    .then(function(response) {
+      response.text()
+      .then(function(data) {
+        console.log("stops:", JSON.parse(data))
+        return JSON.parse(data)
+      });
+    })
+  }
 
-  // getLegs() {
-  //   fetch('http://localhost:8080/legs', {
-  //     method: 'GET', 
-  //   })
-  //   .then(function(response) {
-  //     response.text()
-  //     .then(function(data) {
-  //       console.log("legs:", JSON.parse(data))
-  //       return JSON.parse(data)
-  //     });
-  //   })
-  // }
+  getLegs() {
+    fetch('http://localhost:8080/legs', {
+      method: 'GET', 
+    })
+    .then(function(response) {
+      response.text()
+      .then(function(data) {
+        console.log("legs:", JSON.parse(data))
+        return JSON.parse(data)
+      });
+    })
+  }
 
-  // getDriver() {
-  //   fetch('http://localhost:8080/driver', {
-  //     method: 'GET', 
-  //   })
-  //   .then(function(response) {
-  //     response.text()
-  //     .then(function(data) {
-  //       console.log("driver:", JSON.parse(data))
-  //       return JSON.parse(data)
-  //     });
-  //   })
-  // }
+  getDriver() {
+    fetch('http://localhost:8080/driver', {
+      method: 'GET', 
+    })
+    .then(function(response) {
+      response.text()
+      .then(function(data) {
+        console.log("driver:", JSON.parse(data))
+        return JSON.parse(data)
+      });
+    })
+  }
 
-  // componentWillMount() {
-  //   const stops = this.getStops();
-  //   const legs = this.getLegs();
-  //   const driver = this.getDriver();
-  //   this.setState({
-  //     allStops: [...this.state.allStops, stops],
-  //     legs: [...this.state.legs, legs],
-  //     driver: {0: driver}
-  //   });
-  // }
+  componentWillMount() {
+    const stops = this.getStops();
+    const legs = this.getLegs();
+    const driver = this.getDriver();
+    this.setState({
+      allStops: [...this.state.allStops, stops],
+      legs: [...this.state.legs, legs],
+      driver: {0: driver}
+    });
+  }
   
   // CREATE 200 X 200 GRID **************************
   makeGrid() {
@@ -108,7 +108,7 @@ class App extends Component {
           <div class="dropdown" id="dropdown-container">
             <button class="dropbtn drop-down">Select Stop</button>
             <div class="dropdown-content">
-              {this.dropDown()}
+              {/* {this.dropDown()} */}
               {/* Test links until forEach function works */}
               <a href="#">Link 1</a>
               <a href="#">Link 2</a>
