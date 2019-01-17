@@ -116,11 +116,21 @@ class App extends Component {
   }
 
   connectStops = () => {
-    let a 
-    let b
-    let x
-    Math.hypot(a, b);
-    Math.atan(x);
+    let legLines = []
+    if(this.state.allStops.length !== 0) {
+      for (let i = 0; i < this.state.allStops.length - 1; i++) {
+        let current = this.state.allStops[i]
+        let next = this.state.allStops[i + 1]
+        let a = Math.abs(current.x - next.x) * 2;
+        let b = Math.abs(current.x - next.y) * 2;
+        let hypot = Math.hypot(a, b).toFixed(2);
+        let angle = (Math.atan2(a, b) * 180 / Math.PI).toFixed(2)
+        console.log("angle", angle)
+        let line = (<div className={`leg-line ${current.name}`} style={{height: '1px', width: `${hypot}px`, transform: `rotate(${angle}deg)`, backgroundColor: 'green', position: 'absolute', top: `${current.y * 2}px`, left: `${current.x * 2}px`}}></div>)
+        legLines.push(line)
+      }
+    }
+  return legLines 
     // line is a div with height 1 length hypot, position absolute, relative to the stop
   }
 
@@ -155,6 +165,7 @@ class App extends Component {
         <div className="main">
           <div className="map">
             {this.makeGrid()}
+            {this.connectStops()}
             {this.showStops()}
             {this.showDriver()}
           </div>
