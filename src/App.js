@@ -12,7 +12,7 @@ class App extends Component {
     }
   }
 
-  //  GET REQUESTS FOR JSON API *****************
+  //  *** GET REQUESTS FOR JSON API *****************
   getStops = () => {
     fetch('http://localhost:8080/stops', {
       method: 'GET', 
@@ -49,15 +49,15 @@ class App extends Component {
     })
   }
 
+  // *** CALL FETCH FUNCTIONS BEFORE PAGE LOADS *****************
   componentWillMount = () => {
     this.getStops();
     this.getLegs();
     this.getDriver();
-    // this.getLegCoordinates();
   }
   
 
-  // CREATE 200 X 200 GRID *****************
+  // *** CREATE 200 X 200 GRID *****************
   makeGrid = () => {
     const grid = []
     for (let i = 0; i < 100; i++) {
@@ -67,7 +67,7 @@ class App extends Component {
       return grid
   }
 
-  // RENDER THE STOPS INSSIDE THE GRID *****************
+  // *** RENDER THE STOPS INSSIDE THE GRID *****************
   showStops = () => {
     let array = this.state.allStops.map(stop => {
       let top = stop.y * 3
@@ -82,10 +82,13 @@ class App extends Component {
       return array
     }
     
-    // DRAW LEGS ON GRID *****************
+    // *** DRAW LEGS  AND DRIVER ON GRID *****************
     connectStops = () => {
       let legLines = []
       if(this.state.allStops.length !== 0 && this.state.driver.activeLegID) {
+        let driver = null
+        let line
+        let progress = this.state.driver.legProgress
         for (let i = 0; i < this.state.allStops.length - 1; i++) {
           let current = this.state.allStops[i]
           let next = this.state.allStops[i + 1]
@@ -93,37 +96,60 @@ class App extends Component {
           let b = next.y - current.y;
           let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
           let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
+
           let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
-          let driver = this.state.driver.activeLegID.charAt(0) === current.name ? 
-            <i className="fas fa-truck" style={{
+          
+          if (this.state.driver.activeLegID.charAt(0) === current.name) {
+            driver = (<i className="fas fa-truck" style={{
+                  position: 'absolute', 
+                  top: '-3px',
+                  left: `${progress * hypot / 100}px`
+                }}></i>)
+
+                 line = (
+                  <div 
+                    key={current.name}
+                    className={`leg-line ${current.name}`} 
+                    style={{height: '2.5px', 
+                    width: `${hypot}px`, 
+                    position: 'absolute', 
+                    transform: `rotate(${angle}deg)`, 
+                    transformOrigin: 'top left', 
+                    top: `${current.y * 3 + 10}px`, 
+                    left: `${current.x * 3 + 20}px`}}
+                  >
+                  <div className="first" style={{backgroundColor: 'green', height: '2.5px', 
+                    width: `${hypot * (progress / 100)}px`}}></div>
+                  {driver}
+                  <div className="second" style={{backgroundColor: 'yellow', height: '2.5px', 
+                    width: `${hypot * ((100 - progress) / 100)}px`, float: "right"}}></div>
+                  </div>
+                )
+          } else {
+            driver = null
+             line = (
+              <div 
+              key={current.name}
+              className={`leg-line ${current.name}`} 
+              style={{height: '2.5px', 
+              width: `${hypot}px`, 
+              backgroundColor: lineCol, 
               position: 'absolute', 
-              top: '-3px',
-              left: `${this.state.driver.legProgress * hypot / 100}px`
-            }}></i> 
-            : null
-          let line = (
-            <div 
-            key={current.name}
-            className={`leg-line ${current.name}`} 
-            style={{height: '2.5px', 
-            width: `${hypot}px`, 
-            backgroundColor: lineCol, 
-            position: 'absolute', 
-            transform: `rotate(${angle}deg)`, 
-            transformOrigin: 'top left', 
-            top: `${current.y * 3 + 10}px`, 
-            left: `${current.x * 3 + 20}px`}}
-            >
-          {driver}
+              transform: `rotate(${angle}deg)`, 
+              transformOrigin: 'top left', 
+              top: `${current.y * 3 + 10}px`, 
+              left: `${current.x * 3 + 20}px`}}
+              >
           </div>
         )
+      }
         legLines.push(line)
       }
     }
     return legLines 
   }
   
-  // POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
+  // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
   dropDown = () => {
     const array = this.state.legs.map(item => {
         return (<div value={item.legID} key={item.legID}>{item.legID}</div>)
@@ -131,7 +157,7 @@ class App extends Component {
     return array
   }
 
-  // UPDATE PERCENTAGE OF LEG COMPLETED *****************
+  // *** UPDATE PERCENTAGE OF LEG COMPLETED *****************
   handlePercentChange = (e) => {
     this.setState({ updatePercent: e.target.value})
   }
@@ -187,10 +213,13 @@ export default App;
 - show stops on grid by location ----
 - show driver position on grid ----
 - highlight complete legs ---- 
-- hightlight completed section of current leg
+- hightlight completed section of current leg ----
 - add form to change driver's position
     - select leg via dropdown
     - select percent progress via textbox
 
+
+- fix first/last stop overlap
+-animate truck movement
 
 */
