@@ -96,17 +96,17 @@ class App extends Component {
 
 
     // Temporary - show driver at start of leg
-    // let top = stop.y * 2
-    // let left = stop.x * 2
+    // let top = stop.y * 3
+    // let left = stop.x * 3
     // return (<i className="fas fa-truck"></i>)
   }
 
   showStops = () => {
       let array = this.state.allStops.map(stop => {
-        let top = stop.y * 2
-        let left = stop.x * 2
+        let top = stop.y * 3
+        let left = stop.x * 3
         return (
-          <div className="truck-stop" key={stop.name} style={{position: 'absolute', top: top, left: left}}>
+          <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left}}>
             {stop.name} &nbsp;
             <i className="fas fa-circle fa-xs"></i>
           </div>
@@ -121,17 +121,18 @@ class App extends Component {
       for (let i = 0; i < this.state.allStops.length - 1; i++) {
         let current = this.state.allStops[i]
         let next = this.state.allStops[i + 1]
-        let a = Math.abs(current.x - next.x) * 2;
-        let b = Math.abs(current.x - next.y) * 2;
-        let hypot = Math.hypot(a, b).toFixed(2);
-        let angle = (Math.atan2(a, b) * 180 / Math.PI).toFixed(2)
-        console.log("angle", angle)
-        let line = (<div className={`leg-line ${current.name}`} style={{height: '1px', width: `${hypot}px`, transform: `rotate(${angle}deg)`, backgroundColor: 'green', position: 'absolute', top: `${current.y * 2}px`, left: `${current.x * 2}px`}}></div>)
+        let a = next.x - current.x;
+        let b = next.y - current.y;
+        let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
+        let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
+        let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
+  
+        let line = (<div className={`leg-line ${current.name}`} style={{height: '2.5px', width: `${hypot}px`, backgroundColor: lineCol, position: 'absolute', transform: `rotate(${angle}deg)`, transformOrigin: 'top left', top: `${current.y * 3 + 10}px`, left: `${current.x * 3 + 20}px`}}></div>)
+        console.log(line)
         legLines.push(line)
       }
     }
   return legLines 
-    // line is a div with height 1 length hypot, position absolute, relative to the stop
   }
 
   getLegCoordinates = () => {
@@ -204,14 +205,11 @@ export default App;
 - create 200 x 200 grid -------
 - show stops on grid by location ----
 - show driver position on grid
-- highlight complete legs  
+- highlight complete legs ---- 
 - hightlight completed section of current leg
 - add form to change driver's position
     - select leg via dropdown
     - select percent progress via textbox
-
-
-
 
 
 */
