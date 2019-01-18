@@ -53,11 +53,11 @@ class App extends Component {
     this.getStops();
     this.getLegs();
     this.getDriver();
-    this.getLegCoordinates();
+    // this.getLegCoordinates();
   }
   
 
-  // CREATE 200 X 200 GRID **************************
+  // CREATE 200 X 200 GRID *****************
   makeGrid = () => {
     const grid = []
     for (let i = 0; i < 100; i++) {
@@ -67,46 +67,36 @@ class App extends Component {
       return grid
   }
 
-  // POPULATE DROP DOWN WITH STOP LIST FROM STATE
-  dropDown = () => {
-    const array = this.state.legs.map(item => {
-        return (<div value={item.legID} key={item.legID}>{item.legID}</div>)
-      })
-    return array
-  }
-
-  handlePercentChange = (e) => {
-    this.setState({ updatePercent: e.target.value})
-  }
-
+  // RENDER THE STOPS INSSIDE THE GRID *****************
   showStops = () => {
-      let array = this.state.allStops.map(stop => {
-        let top = stop.y * 3
-        let left = stop.x * 3
-        return (
-          <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left}}>
+    let array = this.state.allStops.map(stop => {
+      let top = stop.y * 3
+      let left = stop.x * 3
+      return (
+        <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left}}>
             {stop.name} &nbsp;
             <i className="fas fa-circle fa-xs"></i>
           </div>
         )
       })
       return array
-  }
-
-  connectStops = () => {
-    let legLines = []
-    if(this.state.allStops.length !== 0 && this.state.driver.activeLegID) {
-      for (let i = 0; i < this.state.allStops.length - 1; i++) {
-        let current = this.state.allStops[i]
-        let next = this.state.allStops[i + 1]
-        let a = next.x - current.x;
-        let b = next.y - current.y;
-        let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
-        let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
-        let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
-        let driver = this.state.driver.activeLegID.charAt(0) === current.name ? <i className="fas fa-truck"></i> : null
-        let line = (
-          <div 
+    }
+    
+    // DRAW LEGS ON GRID *****************
+    connectStops = () => {
+      let legLines = []
+      if(this.state.allStops.length !== 0 && this.state.driver.activeLegID) {
+        for (let i = 0; i < this.state.allStops.length - 1; i++) {
+          let current = this.state.allStops[i]
+          let next = this.state.allStops[i + 1]
+          let a = next.x - current.x;
+          let b = next.y - current.y;
+          let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
+          let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
+          let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
+          let driver = this.state.driver.activeLegID.charAt(0) === current.name ? <i className="fas fa-truck"></i> : null
+          let line = (
+            <div 
             key={current.name}
             className={`leg-line ${current.name}`} 
             style={{height: '2.5px', 
@@ -117,35 +107,29 @@ class App extends Component {
             transformOrigin: 'top left', 
             top: `${current.y * 3 + 10}px`, 
             left: `${current.x * 3 + 20}px`}}
-          >
+            >
           {driver}
           </div>
         )
         legLines.push(line)
       }
     }
-  return legLines 
+    return legLines 
+  }
+  
+  // POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
+  dropDown = () => {
+    const array = this.state.legs.map(item => {
+        return (<div value={item.legID} key={item.legID}>{item.legID}</div>)
+      })
+    return array
   }
 
-  getLegCoordinates = () => {
-    // get the coordinates from the stops
-    const legsWithCoords = []
-    console.log("STATE", this.state.legs)
-    this.state.legs.map(leg => {
-      legsWithCoords.push(leg)
-      console.log("!!", leg)
-      for (let i = 0; i < this.state.allStops.length; i++) {
-        if (leg.startStop === this.state.allStops[i].name) {
-          leg.startStopX = this.state.allStops[i].x
-          leg.startStopY = this.state.allStops[i].y
-        }
-      }
-      return leg
-    })
-    this.setState({legsWithCoords: legsWithCoords})
+  // UPDATE PERCENTAGE OF LEG COMPLETED *****************
+  handlePercentChange = (e) => {
+    this.setState({ updatePercent: e.target.value})
   }
-
-
+  
   render() {
     return (
       <div className="App">
