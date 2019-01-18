@@ -79,28 +79,6 @@ class App extends Component {
     this.setState({ updatePercent: e.target.value})
   }
 
-  // ------------------------------------------------------------------
-  showDriver = () => {
-    let activeLeg = this.state.driver.activeLegID
-    let start = ""
-    if (activeLeg) {
-      for (let i = 0; i < this.state.allStops.length; i ++) {
-        if (activeLeg[0] === this.state.allStops[i].name) {
-          start = activeLeg[0]
-          return (<i className="fas fa-truck"></i>)
-        }
-      }
-      return 
-    }
-    // find use percent finished to place along leg div
-
-
-    // Temporary - show driver at start of leg
-    // let top = stop.y * 3
-    // let left = stop.x * 3
-    // return (<i className="fas fa-truck"></i>)
-  }
-
   showStops = () => {
       let array = this.state.allStops.map(stop => {
         let top = stop.y * 3
@@ -117,7 +95,7 @@ class App extends Component {
 
   connectStops = () => {
     let legLines = []
-    if(this.state.allStops.length !== 0) {
+    if(this.state.allStops.length !== 0 && this.state.driver.activeLegID) {
       for (let i = 0; i < this.state.allStops.length - 1; i++) {
         let current = this.state.allStops[i]
         let next = this.state.allStops[i + 1]
@@ -126,9 +104,23 @@ class App extends Component {
         let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
         let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
         let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
-  
-        let line = (<div className={`leg-line ${current.name}`} style={{height: '2.5px', width: `${hypot}px`, backgroundColor: lineCol, position: 'absolute', transform: `rotate(${angle}deg)`, transformOrigin: 'top left', top: `${current.y * 3 + 10}px`, left: `${current.x * 3 + 20}px`}}></div>)
-        console.log(line)
+        let driver = this.state.driver.activeLegID.charAt(0) === current.name ? <i className="fas fa-truck"></i> : null
+        let line = (
+          <div 
+            key={current.name}
+            className={`leg-line ${current.name}`} 
+            style={{height: '2.5px', 
+            width: `${hypot}px`, 
+            backgroundColor: lineCol, 
+            position: 'absolute', 
+            transform: `rotate(${angle}deg)`, 
+            transformOrigin: 'top left', 
+            top: `${current.y * 3 + 10}px`, 
+            left: `${current.x * 3 + 20}px`}}
+          >
+          {driver}
+          </div>
+        )
         legLines.push(line)
       }
     }
@@ -168,7 +160,6 @@ class App extends Component {
             {this.makeGrid()}
             {this.connectStops()}
             {this.showStops()}
-            {this.showDriver()}
           </div>
 
           <form className="update-form">
