@@ -94,7 +94,13 @@ class App extends Component {
           let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
           let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
           let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
-          let driver = this.state.driver.activeLegID.charAt(0) === current.name ? <i className="fas fa-truck"></i> : null
+          let driver = this.state.driver.activeLegID.charAt(0) === current.name ? 
+            <i className="fas fa-truck" style={{
+              position: 'absolute', 
+              top: '-3px',
+              left: `${this.state.driver.legProgress * hypot / 100}px`
+            }}></i> 
+            : null
           let line = (
             <div 
             key={current.name}
@@ -179,7 +185,7 @@ export default App;
 - set state with api datan-----
 - create 200 x 200 grid -------
 - show stops on grid by location ----
-- show driver position on grid
+- show driver position on grid ----
 - highlight complete legs ---- 
 - hightlight completed section of current leg
 - add form to change driver's position
