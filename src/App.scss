@@ -141,7 +141,7 @@ $hover-green: rgb(111, 206, 111);
 
   .button {
     font-family: inherit;
-    height: 2.5rem;
+    height: 3rem;
     font-size: 1.25rem;
     background-color: rgb(149, 151, 147);
     border: none;
@@ -149,6 +149,13 @@ $hover-green: rgb(111, 206, 111);
     &:hover {
       background-color: $hover-green;
     }
+  }
+
+  .dropbtn.drop-down.button{
+    text-align: center;
+    padding-top: 0.75rem;
+    width: 6rem;
+    height: 3rem;
   }
 
   .input {

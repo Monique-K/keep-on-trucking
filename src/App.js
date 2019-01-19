@@ -9,6 +9,8 @@ class App extends Component {
       legs: [],
       driver: {},
       updatePercent: "",
+      updateLeg: "",
+      formError: null
     }
   }
 
@@ -152,7 +154,7 @@ class App extends Component {
   // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
   dropDown = () => {
     const array = this.state.legs.map(item => {
-        return (<div value={item.legID} key={item.legID} className="dropdown-item">{item.legID}</div>)
+        return (<div id={item.legID} key={item.legID} className="dropdown-item" onClick={this.handleLegChange}>{item.legID}</div>)
       })
     return array
   }
@@ -160,6 +162,27 @@ class App extends Component {
   // *** UPDATE PERCENTAGE OF LEG COMPLETED *****************
   handlePercentChange = (e) => {
     this.setState({ updatePercent: e.target.value})
+  }
+
+  handleLegChange = (e) => {
+    this.setState({ updateLeg: e.target.id})
+  }
+
+  handleFormSubmit = () => {
+    // const updatedDriver = JSON.stringify({
+    //   activeLegID: this.state.updateLeg,
+    //   legProgress: this.state.updatePercent
+    // })
+
+    // fetch('http://localhost:8080/driver', {
+    //   method: 'PUT',
+    //   body: updatedDriver,
+    // })
+    // .then(function (response) {
+    //   console.log("API response:", response)
+    //   return response.json();
+    // })
+  
   }
   
   render() {
@@ -172,6 +195,12 @@ class App extends Component {
         Keep on Truckin'
         </div>
         <div className="main">
+
+          <div className="position-section">
+            <div className="position-title">Driver Position:</div>
+            <div className="position-leg">Leg: {this.state.driver.activeLegID}</div>
+            <div className="position-percent">Leg Progress: {this.state.driver.legProgress}%</div>
+          </div>
 
           <div className="map-section">
             <div className="map">
@@ -192,7 +221,7 @@ class App extends Component {
               <div className="update-form">
                 <div className="form-title">Update Driver Position</div>
                   <div className="dropdown" id="dropdown-container">
-                    <button className="dropbtn drop-down button">Select Leg</button>
+                    <div className="dropbtn drop-down button">Select Leg</div>
                     <div className="dropdown-content">
                       {this.dropDown()}
                     </div>
@@ -207,6 +236,7 @@ class App extends Component {
                     >
                   </input>
                 <button type="submit" className="button">Update</button>
+                <div className="form-error">{this.state.formError}</div>
               </div>
             </form>
           </div>
@@ -236,5 +266,6 @@ export default App;
 
 - fix first/last stop overlap
 -animate truck movement
+- buttons are wrong height
 
 */
