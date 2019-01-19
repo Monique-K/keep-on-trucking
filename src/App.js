@@ -70,8 +70,8 @@ class App extends Component {
   // *** RENDER THE STOPS INSSIDE THE GRID *****************
   showStops = () => {
     let array = this.state.allStops.map(stop => {
-      let top = stop.y * 3
-      let left = stop.x * 3
+      let top = stop.y * 5
+      let left = stop.x * 5
       return (
         <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left}}>
             {stop.name} &nbsp;
@@ -94,56 +94,56 @@ class App extends Component {
           let next = this.state.allStops[i + 1]
           let a = next.x - current.x;
           let b = next.y - current.y;
-          let hypot = Math.hypot(a * 3, b * 3).toFixed(2);
+          let hypot = Math.hypot(a * 5, b * 5).toFixed(2);
           let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
 
           let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
           
           if (this.state.driver.activeLegID.charAt(0) === current.name) {
-            driver = (<i className="fas fa-truck" style={{
+            driver = (<i className="fas fa-truck fa-lg" style={{
                   position: 'absolute', 
                   top: '-3px',
                   left: `${progress * hypot / 100}px`
                 }}></i>)
 
-                 line = (
-                  <div 
-                    key={current.name}
-                    className={`leg-line ${current.name}`} 
-                    style={{height: '2.5px', 
-                    width: `${hypot}px`, 
-                    position: 'absolute', 
-                    transform: `rotate(${angle}deg)`, 
-                    transformOrigin: 'top left', 
-                    top: `${current.y * 3 + 10}px`, 
-                    left: `${current.x * 3 + 20}px`}}
-                  >
-                  <div className="first" style={{backgroundColor: 'green', height: '2.5px', 
-                    width: `${hypot * (progress / 100)}px`}}></div>
-                  {driver}
-                  <div className="second" style={{backgroundColor: 'yellow', height: '2.5px', 
-                    width: `${hypot * ((100 - progress) / 100)}px`, float: "right"}}></div>
-                  </div>
-                )
+            line = (
+              <div 
+                key={current.name}
+                className={`leg-line ${current.name}`} 
+                style={{height: '2.5px', 
+                width: `${hypot}px`, 
+                position: 'absolute', 
+                transform: `rotate(${angle}deg)`, 
+                transformOrigin: 'top left', 
+                top: `${current.y * 5 + 10}px`, 
+                left: `${current.x * 5 + 20}px`}}
+              >
+              <div className="first" style={{backgroundColor: 'green', height: '2.5px', 
+                width: `${hypot * (progress / 100)}px`}}></div>
+              {driver}
+              <div className="second" style={{backgroundColor: 'yellow', height: '2.5px', 
+                width: `${hypot * ((100 - progress) / 100)}px`, float: "right"}}></div>
+              </div>
+            )
           } else {
             driver = null
-             line = (
+            line = (
               <div 
-              key={current.name}
-              className={`leg-line ${current.name}`} 
-              style={{height: '2.5px', 
-              width: `${hypot}px`, 
-              backgroundColor: lineCol, 
-              position: 'absolute', 
-              transform: `rotate(${angle}deg)`, 
-              transformOrigin: 'top left', 
-              top: `${current.y * 3 + 10}px`, 
-              left: `${current.x * 3 + 20}px`}}
+                key={current.name}
+                className={`leg-line ${current.name}`} 
+                style={{height: '2.5px', 
+                width: `${hypot}px`, 
+                backgroundColor: lineCol, 
+                position: 'absolute', 
+                transform: `rotate(${angle}deg)`, 
+                transformOrigin: 'top left', 
+                top: `${current.y * 5 + 10}px`, 
+                left: `${current.x * 5 + 20}px`}}
               >
           </div>
         )
       }
-        legLines.push(line)
+      legLines.push(line)
       }
     }
     return legLines 
@@ -152,7 +152,7 @@ class App extends Component {
   // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
   dropDown = () => {
     const array = this.state.legs.map(item => {
-        return (<div value={item.legID} key={item.legID}>{item.legID}</div>)
+        return (<div value={item.legID} key={item.legID} className="dropdown-item">{item.legID}</div>)
       })
     return array
   }
@@ -166,35 +166,50 @@ class App extends Component {
     return (
       <div className="App">
       <div className="banner">
-        <img src={require('./images/banner-truck.jpg')} alt="truck" />
+        {/* <img src={require('./images/banner-truck.jpg')} alt="truck" /> */}
       </div>
         <div className="title">
         Keep on Truckin'
         </div>
         <div className="main">
-          <div className="map">
-            {this.makeGrid()}
-            {this.connectStops()}
-            {this.showStops()}
+
+          <div className="map-section">
+            <div className="map">
+              {this.makeGrid()}
+              {this.connectStops()}
+              {this.showStops()}
+            </div>
+            <div className="legend">
+              <div className="legend-text">Complete:</div>
+              <div className="legend-item complete"></div>
+              <div className="legend-text">Incomplete:</div>
+              <div className="legend-item incomplete"></div>
+            </div>
           </div>
 
-          <form className="update-form">
-            <div className="dropdown" id="dropdown-container">
-              <button className="dropbtn drop-down">Select Stop</button>
-              <div className="dropdown-content">
-                {this.dropDown()}
+          <div className="form-section">
+            <form className="form">
+              <div className="update-form">
+                <div className="form-title">Update Driver Position</div>
+                  <div className="dropdown" id="dropdown-container">
+                    <button className="dropbtn drop-down button">Select Leg</button>
+                    <div className="dropdown-content">
+                      {this.dropDown()}
+                    </div>
+                    <br />
+                  </div>
+                  <input 
+                    type="text" 
+                    className="input button"
+                    value={this.state.updatePercent} 
+                    placeholder="Percent complete"
+                    onChange={this.handlePercentChange}
+                    >
+                  </input>
+                <button type="submit" className="button">Update</button>
               </div>
-              <br />
-            </div>
-            <input 
-              type="text" 
-              value={this.state.updatePercent} 
-              placeholder="Percent complete"
-              onChange={this.handlePercentChange}
-            >
-            </input>
-            <button type="submit">Update</button>
-          </form>
+            </form>
+          </div>
 
 
         </div>
@@ -216,8 +231,8 @@ export default App;
 - hightlight completed section of current leg ----
 - add form to change driver's position
     - select leg via dropdown
-    - select percent progress via textbox
-
+    - select percent progress via slider
+- Features.md 
 
 - fix first/last stop overlap
 -animate truck movement
