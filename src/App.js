@@ -9,8 +9,10 @@ class App extends Component {
       legs: [],
       driver: {},
       updatePercent: "",
-      updateLeg: "",
-      formError: null
+      updateLeg: "Select Leg",
+      formError: null,
+      // totalDistance: 0,
+      // totalProgress: 0,
     }
   }
 
@@ -72,10 +74,10 @@ class App extends Component {
   // *** RENDER THE STOPS INSSIDE THE GRID *****************
   showStops = () => {
     let array = this.state.allStops.map(stop => {
-      let top = stop.y * 5
-      let left = stop.x * 5
+      let top = stop.y * 4
+      let left = stop.x * 4
       return (
-        <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left}}>
+        <div className={stop.name} key={stop.name} style={{position: 'absolute', top: top, left: left, color: 'rgb(41, 39, 39)'}}>
             {stop.name} &nbsp;
             <i className="fas fa-circle fa-xs"></i>
           </div>
@@ -96,10 +98,10 @@ class App extends Component {
           let next = this.state.allStops[i + 1]
           let a = next.x - current.x;
           let b = next.y - current.y;
-          let hypot = Math.hypot(a * 5, b * 5).toFixed(2);
-          let angle = Math.ceil((Math.atan2(b, a) * 180 / Math.PI))
+          let hypot = Math.hypot(a * 4, b * 4).toFixed(2);
+          let angle = Math.floor((Math.atan2(b, a) * 180 / Math.PI))
 
-          let lineCol = this.state.driver.activeLegID > current.name ? "green" : "yellow"
+          let lineCol = this.state.driver.activeLegID > current.name ? "rgb(55, 179, 55)" : "yellow"
           
           if (this.state.driver.activeLegID.charAt(0) === current.name) {
             driver = (<i className="fas fa-truck fa-lg" style={{
@@ -117,10 +119,10 @@ class App extends Component {
                 position: 'absolute', 
                 transform: `rotate(${angle}deg)`, 
                 transformOrigin: 'top left', 
-                top: `${current.y * 5 + 10}px`, 
-                left: `${current.x * 5 + 20}px`}}
+                top: `${current.y * 4 + 10}px`, 
+                left: `${current.x * 4 + 20}px`}}
               >
-              <div className="first" style={{backgroundColor: 'green', height: '2.5px', 
+              <div className="first" style={{backgroundColor: 'rgb(55, 179, 55)', height: '2.5px', 
                 width: `${hypot * (progress / 100)}px`}}></div>
               {driver}
               <div className="second" style={{backgroundColor: 'yellow', height: '2.5px', 
@@ -139,8 +141,8 @@ class App extends Component {
                 position: 'absolute', 
                 transform: `rotate(${angle}deg)`, 
                 transformOrigin: 'top left', 
-                top: `${current.y * 5 + 10}px`, 
-                left: `${current.x * 5 + 20}px`}}
+                top: `${current.y * 4 + 10}px`, 
+                left: `${current.x * 4 + 20}px`}}
               >
           </div>
         )
@@ -154,21 +156,42 @@ class App extends Component {
   // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
   dropDown = () => {
     const array = this.state.legs.map(item => {
-        return (<div id={item.legID} key={item.legID} className="dropdown-item" onClick={this.handleLegChange}>{item.legID}</div>)
+        return (<div id={item.legID} key={item.legID} className="dropdown-item" onClick={ e => this.handleLegChange(e) }>{item.legID}</div>)
       })
     return array
   }
 
   // *** UPDATE PERCENTAGE OF LEG COMPLETED *****************
   handlePercentChange = (e) => {
+    this.setState({ formError: "" })
     this.setState({ updatePercent: e.target.value})
   }
 
+  // *** UPDATE LEG SELECTION *****************
   handleLegChange = (e) => {
+    this.setState({ formError: "" })
     this.setState({ updateLeg: e.target.id})
   }
 
-  handleFormSubmit = () => {
+  errorCheck = () => {
+    let percent = Number(this.state.updatePercent)
+    console.log("parse", percent)
+    if (this.state.updatePercent === "" || this.state.updateLeg === "Select Leg") {
+      this.setState({ formError: "Please enter a leg and percentage complete" }) 
+    } else if (isNaN(percent) || percent > 100 || percent < 0) {
+      this.setState({ formError: "Please enter a percentage from 0 to 100" })
+    }
+  }
+
+  // *** SUBMIT THE NEW LEG AND PERCENTAGE TO API *****************
+  handleFormSubmit = (e) => {
+    // e.stopImmediatePropagation()
+    e.preventDefault()
+    this.errorCheck()
+    this.setState({
+      updateLeg: "Select Leg",
+      updatePercent: ""
+    })
     // const updatedDriver = JSON.stringify({
     //   activeLegID: this.state.updateLeg,
     //   legProgress: this.state.updatePercent
@@ -188,19 +211,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <div className="banner">
-        {/* <img src={require('./images/banner-truck.jpg')} alt="truck" /> */}
-      </div>
-        <div className="title">
-        Keep on Truckin'
-        </div>
-        <div className="main">
 
-          <div className="position-section">
-            <div className="position-title">Driver Position:</div>
-            <div className="position-leg">Leg: {this.state.driver.activeLegID}</div>
-            <div className="position-percent">Leg Progress: {this.state.driver.legProgress}%</div>
+        <div className="navbar">
+          <div className="title">
+          Keep on Truckin'
           </div>
+        </div>
+        
+        <div className="main">
 
           <div className="map-section">
             <div className="map">
@@ -208,39 +226,59 @@ class App extends Component {
               {this.connectStops()}
               {this.showStops()}
             </div>
-            <div className="legend">
-              <div className="legend-text">Complete:</div>
-              <div className="legend-item complete"></div>
-              <div className="legend-text">Incomplete:</div>
-              <div className="legend-item incomplete"></div>
-            </div>
           </div>
 
-          <div className="form-section">
-            <form className="form">
-              <div className="update-form">
-                <div className="form-title">Update Driver Position</div>
-                  <div className="dropdown" id="dropdown-container">
-                    <div className="dropbtn drop-down button">Select Leg</div>
-                    <div className="dropdown-content">
-                      {this.dropDown()}
+          <div className="section-2">
+
+            <div className="form-section">
+              <form className="form">
+                <div className="update-form">
+                  <div className="form-title">Update Driver Position</div>
+
+                    <div className="position-section">
+                      <div className="position-title">Current:</div>
+                      <div className="position-items">
+                        <div className="position-leg">Leg: {this.state.driver.activeLegID}</div>
+                        <div className="position-percent">Leg Progress: {this.state.driver.legProgress}%</div>
+                        {/* <div className="position-total">Total Progress: {this.getTotalProgress()}%</div> */}
+                      </div>
                     </div>
-                    <br />
-                  </div>
-                  <input 
-                    type="text" 
-                    className="input button"
-                    value={this.state.updatePercent} 
-                    placeholder="Percent complete"
-                    onChange={this.handlePercentChange}
-                    >
-                  </input>
-                <button type="submit" className="button">Update</button>
-                <div className="form-error">{this.state.formError}</div>
-              </div>
-            </form>
-          </div>
 
+                    <div className="dropdown-and-input">
+                      <div className="dropdown" id="dropdown-container">
+                        <div className="dropbtn drop-down button">{this.state.updateLeg}</div>
+                        <div className="dropdown-content">
+                          {this.dropDown()}
+                        </div>
+                        <br />
+                      </div>
+                      <input 
+                        type="text" 
+                        className="input button"
+                        value={this.state.updatePercent} 
+                        placeholder="Percent complete"
+                        onChange={this.handlePercentChange}
+                        >
+                      </input>
+                    </div>
+                  <button type="submit" className="button update-btn" onClick={this.handleFormSubmit}>Update</button>
+                  <div className="form-error">{this.state.formError}</div>
+                </div>
+              </form>
+            </div>
+            
+            <div className="legend">
+              <div className="legend-section">
+                <div className="legend-text">Complete:</div>
+                <div className="legend-item complete"></div>
+              </div>
+              <div className="legend-section">
+                <div className="legend-text">Incomplete:</div>
+                <div className="legend-item incomplete"></div>
+              </div>
+            </div>
+
+          </div>
 
         </div>
       </div>
@@ -253,19 +291,19 @@ export default App;
 /*
 *********** TO DO ***********
 
-- set state with api datan-----
+- set state with api data-----
 - create 200 x 200 grid -------
-- show stops on grid by location ----
-- show driver position on grid ----
+- show stops on grid by location --
+- show driver position on grid ---
 - highlight complete legs ---- 
-- hightlight completed section of current leg ----
-- add form to change driver's position
+- hightlight completed section of current leg --
+- ------------------------------------------add form to change driver's position
     - select leg via dropdown
-    - select percent progress via slider
-- Features.md 
+    - ----------------------------------------select percent progress via slider
+- -------------------------------------------------------------------Features.md 
+- errors --
 
-- fix first/last stop overlap
--animate truck movement
-- buttons are wrong height
+- ---------------------------------------------------fix first/last stop overlap
+----------------------------------------------------------animate truck movement
 
 */
