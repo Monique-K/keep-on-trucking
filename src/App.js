@@ -185,25 +185,27 @@ class App extends Component {
 
   // *** SUBMIT THE NEW LEG AND PERCENTAGE TO API *****************
   handleFormSubmit = (e) => {
-    // e.stopImmediatePropagation()
     e.preventDefault()
     this.errorCheck()
-    this.setState({
-      updateLeg: "Select Leg",
-      updatePercent: ""
+    const updatedDriver = JSON.stringify({
+      activeLegID: this.state.updateLeg,
+      legProgress: this.state.updatePercent
     })
-    // const updatedDriver = JSON.stringify({
-    //   activeLegID: this.state.updateLeg,
-    //   legProgress: this.state.updatePercent
-    // })
+    
+    fetch('http://localhost:8080/driver', {
+      method: 'PUT',
+      body:   updatedDriver,
+    })
+    .then(function (response) {
+      const clone = response.clone().text()
+      .then((data) => {
+        this.setState({ driver: JSON.parse(data)}) 
+      });
+    })
 
-    // fetch('http://localhost:8080/driver', {
-    //   method: 'PUT',
-    //   body: updatedDriver,
-    // })
-    // .then(function (response) {
-    //   console.log("API response:", response)
-    //   return response.json();
+    // this.setState({
+    //   updateLeg: "Select Leg",
+    //   updatePercent: ""
     // })
   
   }
