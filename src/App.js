@@ -175,7 +175,6 @@ class App extends Component {
 
   errorCheck = () => {
     let percent = Number(this.state.updatePercent)
-    console.log("parse", percent)
     if (this.state.updatePercent === "" || this.state.updateLeg === "Select Leg") {
       this.setState({ formError: "Please enter a leg and percentage complete" }) 
     } else if (isNaN(percent) || percent > 100 || percent < 0) {
@@ -185,29 +184,31 @@ class App extends Component {
 
   // *** SUBMIT THE NEW LEG AND PERCENTAGE TO API *****************
   handleFormSubmit = (e) => {
-    e.preventDefault()
     this.errorCheck()
-    const updatedDriver = JSON.stringify({
+    const updatedDriver = {
       activeLegID: this.state.updateLeg,
       legProgress: this.state.updatePercent
-    })
-    
-    fetch('http://localhost:8080/driver', {
-      method: 'PUT',
-      body:   updatedDriver,
-    })
-    .then(function (response) {
-      const clone = response.clone().text()
-      .then((data) => {
-        this.setState({ driver: JSON.parse(data)}) 
-      });
-    })
+    }
 
-    // this.setState({
-    //   updateLeg: "Select Leg",
-    //   updatePercent: ""
-    // })
-  
+    fetch('http://localhost:8080/driver', {
+      method: 'POST', 
+      body: JSON.stringify(updatedDriver), // data can be `string` or {object}!
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .then(response => {
+      console.log('Success:', JSON.stringify(response))
+      this.setState({
+        updateLeg: response.activeLegID,
+        updatePercent: response.legProgress
+      })
+    })
+    this.getDriver()
+    this.setState({
+      updatePercent: "",
+      updateLeg: "Select Leg",
+    })
   }
   
   render() {
