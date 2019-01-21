@@ -99,6 +99,12 @@ class App extends Component {
           let hypot = Math.hypot(a * 4, b * 4).toFixed(2);
           let angle = Math.floor((Math.atan2(b, a) * 180 / Math.PI))
 
+          // If the driver is going left to right on the map, flip the truck icon so 
+          // it appears upright
+          let rotateStyle = current.x > next.x ? 'scaleY(-1)' : null
+
+          
+
           // set colours for complete and incomplete legs
           let lineCol = this.state.driver.activeLegID > current.name ? "rgb(55, 179, 55)" : "yellow"
           
@@ -108,7 +114,8 @@ class App extends Component {
             driver = (<i className="fas fa-truck fa-lg" style={{
                   position: 'absolute', 
                   top: '-3px',
-                  left: `${progress * hypot / 100}px`
+                  left: `${progress * hypot / 100}px`,
+                  transform: rotateStyle 
                 }}></i>)
 
             line = (
