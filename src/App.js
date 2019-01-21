@@ -57,7 +57,6 @@ class App extends Component {
     this.getLegs();
     this.getDriver();
   }
-  
 
   // *** CREATE GRID TO SHOW DRIVER AND STOPS ***
   makeGrid = () => {
@@ -103,6 +102,8 @@ class App extends Component {
           // set colours for complete and incomplete legs
           let lineCol = this.state.driver.activeLegID > current.name ? "rgb(55, 179, 55)" : "yellow"
           
+          // if this is the leg that the driver is in, show the driver's position and the complete and incomplete
+          // sections of the leg
           if (this.state.driver.activeLegID.charAt(0) === current.name) {
             driver = (<i className="fas fa-truck fa-lg" style={{
                   position: 'absolute', 
@@ -113,7 +114,8 @@ class App extends Component {
             line = (
               <div 
                 key={current.name}
-                className={`leg-line ${current.name}`} 
+                className={`leg-line ${current.name}`}
+                hypot={current.hypot} 
                 style={{height: '2.5px', 
                 width: `${hypot}px`, 
                 position: 'absolute', 
@@ -130,11 +132,13 @@ class App extends Component {
               </div>
             )
           } else {
+            // if this is not the driver's current leg, return just the leg line
             driver = null
             line = (
               <div 
                 key={current.name}
-                className={`leg-line ${current.name}`} 
+                className={`leg-line ${current.name}`}
+                hypot={current.hypot} 
                 style={{height: '2.5px', 
                 width: `${hypot}px`, 
                 backgroundColor: lineCol, 
