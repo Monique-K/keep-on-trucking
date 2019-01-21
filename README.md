@@ -3,13 +3,13 @@ KEEP ON TRUCKIN'
 
 ## Getting Started
 
-Navigate to the directory where you would like to save the project. Run `git clone git@github.com:Monique-K/keep-on-trucking.git`. The app will be downloaded into a folder called `keep-on-trucking`. Go into that folder and run `npm install` to download all dependencies. 
+First you will want to start your backend server. Instructions can be found at [Keep on Trucking-API](https://github.com/Monique-K/keep-on-trucking-API).
+
+When your backend server is ready, navigate to the directory where you would like to save the project. Run `git clone git@github.com:Monique-K/keep-on-trucking.git`. The app will be downloaded into a folder called `keep-on-trucking`. Go into that folder and run `npm install` to download all dependencies. 
 
 Now you're ready to roll!
 
-Start the API first by navigating to the `trucking/trucking-api` directory and running `npm start`
-
-In a second terminal tab, navigate to `trucking/app` and run `npm start` to start the main app, which will automatically open in a new browser tab. 
+Run `npm start` to start the frontend app, which will automatically open in a new browser tab. 
 
 ## Description
 
@@ -21,7 +21,7 @@ Update the driver's current leg and the percentage completed,
 
 ![updating](https://github.com/Monique-K/keep-on-trucking/blob/master/src/images/updating.png)
 
-and see the driver's location update on the map in real time. 
+and see the driver's location update on the map! 
 
 ![updated driver position](https://github.com/Monique-K/keep-on-trucking/blob/master/src/images/updated-pos.png)
 
