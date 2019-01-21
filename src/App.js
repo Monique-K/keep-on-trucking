@@ -11,8 +11,6 @@ class App extends Component {
       updatePercent: "",
       updateLeg: "Select Leg",
       formError: null,
-      // totalDistance: 0,
-      // totalProgress: 0,
     }
   }
 
@@ -189,9 +187,8 @@ class App extends Component {
       activeLegID: this.state.updateLeg,
       legProgress: this.state.updatePercent
     }
-
     fetch('http://localhost:8080/driver', {
-      method: 'POST', 
+      method: 'PUT', 
       body: JSON.stringify(updatedDriver), // data can be `string` or {object}!
       headers:{
         'Content-Type': 'application/json'
@@ -243,7 +240,6 @@ class App extends Component {
                       <div className="position-items">
                         <div className="position-leg">Leg: {this.state.driver.activeLegID}</div>
                         <div className="position-percent">Leg Progress: {this.state.driver.legProgress}%</div>
-                        {/* <div className="position-total">Total Progress: {this.getTotalProgress()}%</div> */}
                       </div>
                     </div>
 
@@ -290,23 +286,3 @@ class App extends Component {
 }
 
 export default App;
-
-/*
-*********** TO DO ***********
-
-- set state with api data-----
-- create 200 x 200 grid -------
-- show stops on grid by location --
-- show driver position on grid ---
-- highlight complete legs ---- 
-- hightlight completed section of current leg --
-- ------------------------------------------add form to change driver's position
-    - select leg via dropdown
-    - ----------------------------------------select percent progress via slider
-- -------------------------------------------------------------------Features.md 
-- errors --
-
-- ---------------------------------------------------fix first/last stop overlap
-----------------------------------------------------------animate truck movement
-
-*/
