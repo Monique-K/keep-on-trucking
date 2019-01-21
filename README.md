@@ -13,9 +13,17 @@ In a second terminal tab, navigate to `trucking/app` and run `npm start` to star
 
 ## Description
 
-Keep track of your driver's location with this handy app. Get a visual representation of the driver's route, and their current progress. 
+Keep track of your driver's location with this handy app. Get a visual representation of the driver's route, and their current progress. The driver's location is noted on the right side, and represented as a truck icon on the map. 
 
-Update the driver's current leg and the percentage completed, and see the driver's location update in real time. 
+![main page](https://github.com/Monique-K/keep-on-trucking/blob/master/src/images/main-pg.png)
+
+Update the driver's current leg and the percentage completed, 
+
+![updating](https://github.com/Monique-K/keep-on-trucking/blob/master/src/images/updating.png)
+
+and see the driver's location update on the map in real time. 
+
+![updated driver position](https://github.com/Monique-K/keep-on-trucking/blob/master/src/images/updated-pos.png)
 
 ## Dependencies 
 

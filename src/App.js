@@ -14,7 +14,7 @@ class App extends Component {
     }
   }
 
-  //  *** GET REQUESTS FOR JSON API *****************
+  //  *** GET REQUESTS FOR JSON API ***
   getStops = () => {
     fetch('http://localhost:8080/stops', {
       method: 'GET', 
@@ -51,7 +51,7 @@ class App extends Component {
     })
   }
 
-  // *** CALL FETCH FUNCTIONS BEFORE PAGE LOADS *****************
+  // *** CALL FETCH FUNCTIONS BEFORE PAGE LOADS ***
   componentWillMount = () => {
     this.getStops();
     this.getLegs();
@@ -59,7 +59,7 @@ class App extends Component {
   }
   
 
-  // *** CREATE 200 X 200 GRID *****************
+  // *** CREATE GRID TO SHOW DRIVER AND STOPS ***
   makeGrid = () => {
     const grid = []
     for (let i = 0; i < 100; i++) {
@@ -69,7 +69,7 @@ class App extends Component {
       return grid
   }
 
-  // *** RENDER THE STOPS INSSIDE THE GRID *****************
+  // *** RENDER THE STOPS INSIDE THE GRID ***
   showStops = () => {
     let array = this.state.allStops.map(stop => {
       let top = stop.y * 4
@@ -84,9 +84,10 @@ class App extends Component {
       return array
     }
     
-    // *** DRAW LEGS  AND DRIVER ON GRID *****************
+    // *** DRAW LEGS AND DRIVER ON GRID ***
     connectStops = () => {
       let legLines = []
+      // only run this function once stops and driver position are loaded from API
       if(this.state.allStops.length !== 0 && this.state.driver.activeLegID) {
         let driver = null
         let line
@@ -99,6 +100,7 @@ class App extends Component {
           let hypot = Math.hypot(a * 4, b * 4).toFixed(2);
           let angle = Math.floor((Math.atan2(b, a) * 180 / Math.PI))
 
+          // set colours for complete and incomplete legs
           let lineCol = this.state.driver.activeLegID > current.name ? "rgb(55, 179, 55)" : "yellow"
           
           if (this.state.driver.activeLegID.charAt(0) === current.name) {
@@ -145,13 +147,14 @@ class App extends Component {
           </div>
         )
       }
+      // add each legline to an array
       legLines.push(line)
       }
     }
     return legLines 
   }
   
-  // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE *****************
+  // *** POPULATE DROP DOWN WITH STOP LIST FROM STATE ***
   dropDown = () => {
     const array = this.state.legs.map(item => {
         return (<div id={item.legID} key={item.legID} className="dropdown-item" onClick={ e => this.handleLegChange(e) }>{item.legID}</div>)
@@ -159,28 +162,31 @@ class App extends Component {
     return array
   }
 
-  // *** UPDATE PERCENTAGE OF LEG COMPLETED *****************
+  // *** UPDATE PERCENTAGE OF LEG COMPLETED ***
   handlePercentChange = (e) => {
     this.setState({ formError: "" })
     this.setState({ updatePercent: e.target.value})
   }
 
-  // *** UPDATE LEG SELECTION *****************
+  // *** UPDATE LEG SELECTION ***
   handleLegChange = (e) => {
     this.setState({ formError: "" })
     this.setState({ updateLeg: e.target.id})
   }
 
+  // *** HANDLE ERRORS ON FORM SUBMISSION ***
   errorCheck = () => {
     let percent = Number(this.state.updatePercent)
+    // check for incomplete submission
     if (this.state.updatePercent === "" || this.state.updateLeg === "Select Leg") {
       this.setState({ formError: "Please enter a leg and percentage complete" }) 
+      //check for numbers not in range
     } else if (isNaN(percent) || percent > 100 || percent < 0) {
       this.setState({ formError: "Please enter a percentage from 0 to 100" })
     }
   }
 
-  // *** SUBMIT THE NEW LEG AND PERCENTAGE TO API *****************
+  // *** SUBMIT THE NEW LEG AND PERCENTAGE TO API ***
   handleFormSubmit = (e) => {
     this.errorCheck()
     const updatedDriver = {
@@ -189,19 +195,15 @@ class App extends Component {
     }
     fetch('http://localhost:8080/driver', {
       method: 'PUT', 
-      body: JSON.stringify(updatedDriver), // data can be `string` or {object}!
+      body: JSON.stringify(updatedDriver),
       headers:{
         'Content-Type': 'application/json'
       }
     }).then(res => res.json())
     .then(response => {
       console.log('Success:', JSON.stringify(response))
-      this.setState({
-        updateLeg: response.activeLegID,
-        updatePercent: response.legProgress
-      })
     })
-    this.getDriver()
+    // Reset the update form to its original state
     this.setState({
       updatePercent: "",
       updateLeg: "Select Leg",
